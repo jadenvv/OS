@@ -1,7 +1,5 @@
-CFLAGS = -ffreestanding -I/home/jadenv/gnu-efi-3.0.15/inc/ -I/home/jadenv/gnu-efi-3.0.15/inc/x86_64 -I/home/jadenv/gnu-efi-3.0.15/inc/protocol -c 
-
-LDFLAGS = -nostdlib -Wl,-dll -shared -Wl,--subsystem,10 -e efi_main
+CFLAGS = -ffreestanding -I/home/jadenv/gnu-efi-3.0.15/inc/ -fpic -fno-stack-protector -fno-stack-check -fshort-wchar -mno-red-zone -maccumulate-outgoing-args -c 
+LDFLAGS = -shared -Bsymbolic -L/home/jadenv/gnu-efi-3.0.15/x86_64/lib -L/home/jadenv/gnu-efi-3.0.15/x86_64/gnuefi -T/home/jadenv/gnu-efi-3.0.15/gnuefi/elf_x86_64_efi.lds /home/jadenv/gnu-efi-3.0.15/x86_64/gnuefi/crt0-efi-x86_64.o
 main:
-	x86_64-w64-mingw32-gcc $(CFLAGS) -o ./build/main.o ./src/main.c 
-	x86_64-w64-mingw32-gcc $(CFLAGS) -o ./build/data.o /home/jadenv/gnu-efi-3.0.15/lib/data.c 
-	x86_64-w64-mingw32-gcc $(LDFLAGS) -o ./build/BOOTX64.EFI ./build/main.o ./build/data.o
+	gcc $(CFLAGS) ./src/main.c -o ./build/main.o 
+	gcc $(LDFLAGS) ./build/main.o -o ./build/main.so -lgnuefi -lefi
